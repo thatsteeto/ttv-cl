@@ -1,7 +1,7 @@
 #!/bin/bash
 
 help () {
-    printf 'Examples:\ntwitch-cli watch xqcow 720p\ntwitch record xqcow best\n'
+    printf 'Examples:\nttv-cl watch xqcow 720p\ntwitch record xqcow best\n'
 }
 
 install_function () {
@@ -10,7 +10,9 @@ install_function () {
 	mkdir $HOME/.local/bin/
     fi
 
-    cp twitch-cli $HOME/.local/bin/
+    cp ttv-cl $HOME/.local/bin/
+
+    printf 'ttv-cl was installed in $HOME/.local/bin/\nPlease verify if this directory is in your path...\n'
     
 }
 
@@ -19,7 +21,7 @@ watch_function () {
     channel="${2}"
     quality="${3}"
 
-    streamlink --quiet --player=mpv https://twitch.tv/$channel "${3}" || printf 'Please verify if ~/.local/bin/ is in your path.'
+    streamlink --quiet --player=mpv https://twitch.tv/$channel "${3}" || printf 'Please verify if ~/.local/bin/ is in your path.\n'
 }
 
 record_function () {
@@ -31,14 +33,15 @@ record_function () {
 
 add_rss () {
     channel="${2}"
-    echo $channel >> $HOME/.config/twitchclirc
-    printf $channel' added to ~/.config/twitchclirc\n'
+    echo $channel >> $HOME/.config/ttv-urls
+    printf $channel' added to ~/.config/ttv-urls\n'
 }
 
 feed_function () {
-    selected=$(cat $HOME/.config/twitchclirc | fzf)
+    selected=$(cat $HOME/.config/ttv-urls | fzf)
     streamlink --quiet --player=mpv https://twitch.tv/$selected best
 }
+
 main () {
     case ${1} in
 	watch) watch_function "$@";;
@@ -47,7 +50,7 @@ main () {
 	add) add_rss "$@";;
 	feed) feed_function ;;
 	-h) help "$@";;
-	*) printf 'usage: twitch-cli watch|install|record [channel] [quality]\ntwitch-cli -h for more informations.' && exit 1 ;;
+	*) printf 'usage: ttv-cl watch|install|record [channel] [quality]\nttv-cl -h for more informations.' && exit 1 ;;
     esac
 }
 
